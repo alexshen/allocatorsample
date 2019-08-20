@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		8C36D2192308CD1F00348F2B /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8C36D2182308CD1F00348F2B /* main.cpp */; };
+		8C893585230C02980073860A /* large_allocator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8C893584230C02980073860A /* large_allocator.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +26,11 @@
 /* Begin PBXFileReference section */
 		8C36D2152308CD1F00348F2B /* memoryallocator */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = memoryallocator; sourceTree = BUILT_PRODUCTS_DIR; };
 		8C36D2182308CD1F00348F2B /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		8C36D21F2308D19900348F2B /* large_allocator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = large_allocator.h; sourceTree = "<group>"; };
+		8C36D2202308D1D000348F2B /* rb_tree.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = rb_tree.h; sourceTree = "<group>"; };
+		8C893583230BFC740073860A /* list.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = list.h; sourceTree = "<group>"; };
+		8C893584230C02980073860A /* large_allocator.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = large_allocator.cpp; sourceTree = "<group>"; };
+		8C893586230C07A60073860A /* memory_utils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = memory_utils.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +64,11 @@
 			isa = PBXGroup;
 			children = (
 				8C36D2182308CD1F00348F2B /* main.cpp */,
+				8C36D21F2308D19900348F2B /* large_allocator.h */,
+				8C893584230C02980073860A /* large_allocator.cpp */,
+				8C893586230C07A60073860A /* memory_utils.h */,
+				8C36D2202308D1D000348F2B /* rb_tree.h */,
+				8C893583230BFC740073860A /* list.h */,
 			);
 			path = memoryallocator;
 			sourceTree = "<group>";
@@ -118,6 +129,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8C893585230C02980073860A /* large_allocator.cpp in Sources */,
 				8C36D2192308CD1F00348F2B /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -239,8 +251,10 @@
 		8C36D21D2308CD1F00348F2B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 3CU8PEJE6X;
+				GCC_OPTIMIZATION_LEVEL = 0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -248,6 +262,7 @@
 		8C36D21E2308CD1F00348F2B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 3CU8PEJE6X;
 				PRODUCT_NAME = "$(TARGET_NAME)";
