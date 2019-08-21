@@ -47,28 +47,30 @@ void* LargeAllocator::malloc(std::size_t size, std::size_t alignment)
     
     alignment = std::max(alignment, alignof(Block));
     
-    Block block;
+    Block targetBlock;
     // need to take into account Block alignment
-    // also, we need space for an extra block free block
-    auto payloadSize = roundUpPowerOfTwo(size + sizeof(Block), alignof(Block)) + m_minBlockSize;
-    block.size = calcAlignedAllocSize(payloadSize, alignment);
-    if (auto it = m_freeList.lowerBound(block); it != m_freeList.end()) {
+    auto payloadSize = roundUpPowerOfTwo(size, alignof(Block));
+    targetBlock.size = calcAlignedAllocSize(payloadSize, alignment);
+    if (auto it = m_freeList.lowerBound(targetBlock); it != m_freeList.end()) {
         m_freeList.remove(*it);
         
         auto& block = const_cast<Block&>(*it);
-        auto oldSize = block.size;
-        block.size = calcAlignedAllocSize(roundUpPowerOfTwo(size, alignof(Block)), alignment);
         block.free = false;
         
-        assert(oldSize - block.size >= sizeof(Block) + m_minBlockSize);
+        auto minSizeForSplit = targetBlock.size + sizeof(Block) + m_minBlockSize;
+        // can split
+        if (block.size >= minSizeForSplit) {
+            auto oldSize = block.size;
+            block.size = targetBlock.size;
+            
+            auto next = new (pointerAdd(&block, block.totalSize())) Block;
+            next->size = oldSize - targetBlock.size - sizeof(Block);
+            next->free = true;
 
-        auto next = new (reinterpret_cast<char*>(&block) + block.totalSize()) Block;
-        next->size = oldSize - block.size - sizeof(Block);
-        next->free = true;
-        
-        m_blocks.insertAfter(*next, block);
-        m_freeList.insert(*next);
-        
+            m_blocks.insertAfter(*next, block);
+            m_freeList.insert(*next);
+        }
+
         return adjustForAlignedAlloc(pointerAdd(&block, sizeof(Block)), alignment);
     }
     return nullptr;
