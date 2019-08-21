@@ -35,8 +35,8 @@ void* vmAllocate(std::size_t sizeBytes)
 void vmDeallocate(void* p, std::size_t sizeBytes)
 {
     assert(sizeBytes);
-    bool ok = munmap(p, sizeBytes);
-    assert(ok);
+    auto res = munmap(p, sizeBytes);
+    assert(!res);
 }
 
 #endif

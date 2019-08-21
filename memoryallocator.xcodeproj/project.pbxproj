@@ -33,6 +33,7 @@
 		8C36D2182308CD1F00348F2B /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		8C36D21F2308D19900348F2B /* large_allocator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = large_allocator.h; sourceTree = "<group>"; };
 		8C36D2202308D1D000348F2B /* rb_tree.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = rb_tree.h; sourceTree = "<group>"; };
+		8C79084D230CEF460053EA1B /* aligned_allocator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = aligned_allocator.h; sourceTree = "<group>"; };
 		8C893583230BFC740073860A /* list.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = list.h; sourceTree = "<group>"; };
 		8C893584230C02980073860A /* large_allocator.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = large_allocator.cpp; sourceTree = "<group>"; };
 		8C893586230C07A60073860A /* memory_utils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = memory_utils.h; sourceTree = "<group>"; };
@@ -78,6 +79,7 @@
 				8C36D2202308D1D000348F2B /* rb_tree.h */,
 				8C893583230BFC740073860A /* list.h */,
 				8C18A3D0230CB2F300DDDF03 /* free_list.h */,
+				8C79084D230CEF460053EA1B /* aligned_allocator.h */,
 			);
 			path = memoryallocator;
 			sourceTree = "<group>";

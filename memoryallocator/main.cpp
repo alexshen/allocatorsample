@@ -8,6 +8,7 @@
 
 #include "large_allocator.h"
 #include "segregated_allocator.h"
+#include "aligned_allocator.h"
 #include "free_list.h"
 #include "rb_tree.h"
 
@@ -82,6 +83,10 @@ int main(int argc, const char * argv[]) {
         memory::LargeAllocator allocator(buf, buf + size);
         auto p = allocator.malloc(1 * 1024 * 1024);
         allocator.free(p);
+        
+        memory::AlignedAllocator alignedAlloc(allocator);
+        p = alignedAlloc.malloc(1);
+        alignedAlloc.free(p);
     }
     
     {
@@ -94,5 +99,6 @@ int main(int argc, const char * argv[]) {
         allocator.free(allocator.malloc(7));
         allocator.malloc(9);
     }
+
     delete[] buf;
 }

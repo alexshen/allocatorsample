@@ -85,6 +85,15 @@ inline T alignedCast(U* p)
 }
 
 template<typename T>
+inline T* roundUpPowerOfTwo(T* p, size_t align)
+{
+    assert(align && isPowerOfTwo(align));
+    return alignedCast<T*>(
+               reinterpret_cast<T*>(
+                    reinterpret_cast<std::uintptr_t>(p + align - 1) & ~(align - 1)));
+}
+    
+template<typename T>
 inline T* roundDownPowerOfTwo(T* p, size_t align)
 {
     assert(align && isPowerOfTwo(align));
