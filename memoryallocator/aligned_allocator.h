@@ -21,6 +21,7 @@ namespace memory
 template<typename Allocator>
 class AlignedAllocator
 {
+    static constexpr int MaxAlign = 256;
 public:
     AlignedAllocator(Allocator& alloc)
         : m_allocator(&alloc)
@@ -29,12 +30,12 @@ public:
     void* malloc(std::size_t size, std::size_t alignment = alignof(std::max_align_t))
     {
         assert(alignment && isPowerOfTwo(alignment));
-        assert(alignment < std::numeric_limits<unsigned char>::max());
+        assert(alignment < MaxAlign);
         
         auto p = static_cast<unsigned char*>(m_allocator->malloc(size + alignment));
         auto alignedP = roundUpPowerOfTwo(p + 1, alignment);
         // save the offset
-        alignedP[-1] = alignment == std::numeric_limits<unsigned char>::max() ? 0 : alignedP - p;
+        alignedP[-1] = alignment == MaxAlign ? 0 : alignedP - p;
         return alignedP;
     }
     
@@ -42,7 +43,7 @@ public:
     {
         if (p) {
             auto alignedP = static_cast<unsigned char*>(p);
-            auto unalignedP = alignedP - (alignedP[-1] ? alignedP[-1] : std::numeric_limits<unsigned char>::max());
+            auto unalignedP = alignedP - (alignedP[-1] ? alignedP[-1] : MaxAlign);
             m_allocator->free(unalignedP);
         }
     }
