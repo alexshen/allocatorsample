@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8C18A3D5230CD44A00DDDF03 /* os_memory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8C18A3D4230CD44A00DDDF03 /* os_memory.cpp */; };
 		8C36D2192308CD1F00348F2B /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8C36D2182308CD1F00348F2B /* main.cpp */; };
 		8C893585230C02980073860A /* large_allocator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8C893584230C02980073860A /* large_allocator.cpp */; };
 /* End PBXBuildFile section */
@@ -24,6 +25,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		8C18A3D0230CB2F300DDDF03 /* free_list.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = free_list.h; sourceTree = "<group>"; };
+		8C18A3D2230CBA2800DDDF03 /* segregated_allocator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = segregated_allocator.h; sourceTree = "<group>"; };
+		8C18A3D3230CD3FE00DDDF03 /* os_memory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = os_memory.h; sourceTree = "<group>"; };
+		8C18A3D4230CD44A00DDDF03 /* os_memory.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = os_memory.cpp; sourceTree = "<group>"; };
 		8C36D2152308CD1F00348F2B /* memoryallocator */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = memoryallocator; sourceTree = BUILT_PRODUCTS_DIR; };
 		8C36D2182308CD1F00348F2B /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		8C36D21F2308D19900348F2B /* large_allocator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = large_allocator.h; sourceTree = "<group>"; };
@@ -64,11 +69,15 @@
 			isa = PBXGroup;
 			children = (
 				8C36D2182308CD1F00348F2B /* main.cpp */,
+				8C18A3D3230CD3FE00DDDF03 /* os_memory.h */,
+				8C18A3D4230CD44A00DDDF03 /* os_memory.cpp */,
+				8C18A3D2230CBA2800DDDF03 /* segregated_allocator.h */,
 				8C36D21F2308D19900348F2B /* large_allocator.h */,
 				8C893584230C02980073860A /* large_allocator.cpp */,
 				8C893586230C07A60073860A /* memory_utils.h */,
 				8C36D2202308D1D000348F2B /* rb_tree.h */,
 				8C893583230BFC740073860A /* list.h */,
+				8C18A3D0230CB2F300DDDF03 /* free_list.h */,
 			);
 			path = memoryallocator;
 			sourceTree = "<group>";
@@ -130,6 +139,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8C893585230C02980073860A /* large_allocator.cpp in Sources */,
+				8C18A3D5230CD44A00DDDF03 /* os_memory.cpp in Sources */,
 				8C36D2192308CD1F00348F2B /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

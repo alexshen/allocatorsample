@@ -6,12 +6,16 @@
 //  Copyright © 2019 ashen. All rights reserved.
 //
 
+#include "large_allocator.h"
+#include "segregated_allocator.h"
+#include "free_list.h"
+#include "rb_tree.h"
+
 #include <iostream>
 #include <vector>
 #include <cstdlib>
 #include <algorithm>
-#include "large_allocator.h"
-#include "rb_tree.h"
+
 using namespace std;
 
 struct Foo : RbTreeNode
@@ -74,9 +78,21 @@ int main(int argc, const char * argv[]) {
     constexpr int size = 1024*1024*10;
     auto buf = new char[size];
     
-    memory::LargeAllocator allocator(buf, buf + size);
-    auto p = allocator.malloc(1 * 1024 * 1024);
-    allocator.free(p);
+    {
+        memory::LargeAllocator allocator(buf, buf + size);
+        auto p = allocator.malloc(1 * 1024 * 1024);
+        allocator.free(p);
+    }
     
+    {
+        memory::FreeList freeList(buf, buf + size, 12);
+        freeList.free(freeList.malloc());
+    }
+    
+    {
+        memory::SegregatedAllocator<1> allocator(8, 8);
+        allocator.free(allocator.malloc(7));
+        allocator.malloc(9);
+    }
     delete[] buf;
 }
