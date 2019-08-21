@@ -9,7 +9,7 @@
 #ifndef BOUNDED_ALLOCATOR_H
 #define BOUNDED_ALLOCATOR_H
 
-#include "aligned_allocator.h"
+#include "memory_utils.h"
 
 #include <cstdint>
 #include <cstddef>
@@ -19,37 +19,49 @@ namespace memory
 {
     
 template<typename Allocator, std::uint32_t Tag = 0xDEADBEAFu>
-class BoundedAllocator : protected AlignedAllocator<Allocator>
+class BoundedAllocator
 {
-    using base_t = AlignedAllocator<Allocator>;
+    struct Header
+    {
+        std::uint32_t userSize;
+        std::uint32_t offset;
+    };
 public:
     BoundedAllocator(Allocator& alloc)
-        : base_t(alloc)
+        : m_allocator(&alloc)
     {
     }
     
-    void* malloc(std::size_t size)
+    void* malloc(std::size_t size, std::size_t alignment = alignof(std::max_align_t))
     {
-        // header + user memory + tag
-        auto totalSize = sizeof(std::uint32_t) + size + sizeof(std::uint32_t);
-        auto p = static_cast<std::uint32_t*>(base_t::malloc(totalSize, alignof(std::uint32_t)));
-        *p = static_cast<std::uint32_t>(size);
+        auto maxAlign = std::max(alignment, alignof(std::uint32_t));
+        // header + alignment padding + user memory + tag
+        auto totalSize = roundUpPowerOfTwo(sizeof(Header), maxAlign) + size + sizeof(std::uint32_t);
+        auto p = static_cast<char*>(m_allocator->malloc(totalSize, maxAlign));
+        auto user = alignedCast<Header*>(p + sizeof(Header));
+        user[-1] = {
+            static_cast<std::uint32_t>(size),
+            static_cast<std::uint32_t>(pointerDistanceTo(p, user))
+        };
         
         auto tagData = Tag;
-        std::memcpy(pointerAdd(p, sizeof(std::uint32_t) + size), &tagData, sizeof(std::uint32_t));
-        return &p[1];
+        std::memcpy(pointerAdd(user, size), &tagData, sizeof(std::uint32_t));
+        return user;
     }
     
     void free(void* p)
     {
         if (p) {
             auto user = static_cast<char*>(p);
-            auto userSize = alignedCast<std::uint32_t*>(p)[-1];
+            const auto& header = alignedCast<const Header*>(p)[-1];
             auto tagData = Tag;
-            assert(std::memcmp(user + userSize, &tagData, sizeof(Tag)) == 0);
-            base_t::free(user - sizeof(std::uint32_t));
+            // check if the tag was overwritten
+            assert(std::memcmp(user + header.userSize, &tagData, sizeof(Tag)) == 0);
+            m_allocator->free(user - header.offset);
         }
     }
+private:
+    Allocator* m_allocator;
 };
 
 } // namespace memory

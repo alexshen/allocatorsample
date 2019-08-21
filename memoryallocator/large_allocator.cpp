@@ -7,6 +7,7 @@
 //
 
 #include "large_allocator.h"
+#include "aligned_alloc.h"
 #include "memory_utils.h"
 
 #include <new>
@@ -39,22 +40,28 @@ void LargeAllocator::swap(LargeAllocator& rhs)
     m_freeList.swap(rhs.m_freeList);
 }
 
-void* LargeAllocator::malloc(std::size_t size)
+void* LargeAllocator::malloc(std::size_t size, std::size_t alignment)
 {
     assert(size);
+    assert(isValidAlignment(alignment));
+    
+    alignment = std::max(alignment, alignof(Block));
     
     Block block;
     // need to take into account Block alignment
-    // also, we need an extra block free block
-    block.size = roundUpPowerOfTwo(size + sizeof(Block), alignof(Block)) + m_minBlockSize;
+    // also, we need space for an extra block free block
+    auto payloadSize = roundUpPowerOfTwo(size + sizeof(Block), alignof(Block)) + m_minBlockSize;
+    block.size = calcAlignedAllocSize(payloadSize, alignment);
     if (auto it = m_freeList.lowerBound(block); it != m_freeList.end()) {
         m_freeList.remove(*it);
         
         auto& block = const_cast<Block&>(*it);
         auto oldSize = block.size;
-        block.size = roundUpPowerOfTwo(size, alignof(Block));
+        block.size = calcAlignedAllocSize(roundUpPowerOfTwo(size, alignof(Block)), alignment);
         block.free = false;
         
+        assert(oldSize - block.size >= sizeof(Block) + m_minBlockSize);
+
         auto next = new (reinterpret_cast<char*>(&block) + block.totalSize()) Block;
         next->size = oldSize - block.size - sizeof(Block);
         next->free = true;
@@ -62,7 +69,7 @@ void* LargeAllocator::malloc(std::size_t size)
         m_blocks.insertAfter(*next, block);
         m_freeList.insert(*next);
         
-        return reinterpret_cast<char*>(&block) + sizeof(Block);
+        return adjustForAlignedAlloc(pointerAdd(&block, sizeof(Block)), alignment);
     }
     return nullptr;
 }
@@ -70,7 +77,7 @@ void* LargeAllocator::malloc(std::size_t size)
 void LargeAllocator::free(void* p)
 {
     if (p) {
-        auto block = static_cast<Block*>(p) - 1;
+        auto block = alignedCast<Block*>(getUnalignedAlloc(p)) - 1;
         block->free = true;
         
         // coalesce with the previous or the next block if possible

@@ -8,7 +8,6 @@
 
 #include "large_allocator.h"
 #include "segregated_allocator.h"
-#include "aligned_allocator.h"
 #include "bounded_allocator.h"
 #include "free_list.h"
 #include "rb_tree.h"
@@ -90,11 +89,9 @@ int main(int argc, const char * argv[]) {
         };
         
         memory::BoundedAllocator boundedAlloc(allocator);
-        memory::AlignedAllocator alignedAlloc(boundedAlloc);
-        
-        auto s = static_cast<S*>(alignedAlloc.malloc(sizeof(S), alignof(S)));
-        memset(s + 1, 1, 4);
-        alignedAlloc.free(s);
+        auto s = static_cast<S*>(boundedAlloc.malloc(sizeof(S), alignof(S)));
+        //memset(s + 1, 1, 4);
+        boundedAlloc.free(s);
     }
     
     {

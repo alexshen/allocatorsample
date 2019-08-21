@@ -31,7 +31,7 @@ public:
 
     void swap(LargeAllocator& rhs);
     
-    void* malloc(std::size_t size);
+    void* malloc(std::size_t size, std::size_t alignment = alignof(std::max_align_t));
     void free(void* p);
 private:
     void init(char* beg, char* end);
