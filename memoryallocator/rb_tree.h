@@ -140,7 +140,7 @@ public:
     friend class RbTreeIterator;
 
     using iterator = RbTreeIterator<RbTree, Key, Comp>;
-    using const_iterator = RbTreeIterator<RbTree, const Key, Comp>;
+    using const_iterator = iterator;
     using reverse_iterator = std::reverse_iterator<iterator>;
     using reverse_const_iterator = std::reverse_iterator<const_iterator>;
 
@@ -557,11 +557,10 @@ class RbTreeIterator
 {
 public:
     using value_type = std::remove_const_t<Key>;
-    using reference = Key&;
-    using pointer = Key*;
+    using reference = const Key&;
+    using pointer = const Key*;
     using iterator_category = std::bidirectional_iterator_tag;
     using difference_type = std::ptrdiff_t;
-    
 private:
     friend Tree;
     
@@ -580,12 +579,6 @@ private:
     {
     }
 public:
-    template<typename T, typename = std::enable_if_t<std::is_convertible_v<T*, Key*>>>
-    RbTreeIterator(const RbTreeIterator<Tree, T, Comp>& rhs)
-        : RbTreeIterator(*rhs.m_tree, *rhs.m_node)
-    {
-    }
-    
     RbTreeIterator(const RbTreeIterator&) = default;
     RbTreeIterator(RbTreeIterator&&) = default;
     
