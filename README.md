@@ -1,2 +1,2 @@
 # allocatorsample
-Sample implementation for custom memory allocators, an xcode project is included.
+Sample implementation for custom memory allocators. `cmake` is used to build the project.
